@@ -4,7 +4,7 @@
     $oilqty = (int) $_POST['oilqty'];
     $sparkqty = (int) $_POST['sparkqty'];
     $address = preg_replace('/\t|\R/',' ',$_POST['address']);
-    $document_root = $SERVER['DOCUMENT_ROOT'];
+    //$document_root = $_SERVER['DOCUMENT_ROOT'];
     $date = date('g:i, jS F Y');
     ?>
 
@@ -27,11 +27,17 @@
         <h1>Bob's Auto Parts</h1>
         <h2>Order Results</h2>
         <!-- PHP CONSTANT DECLARATIONS -->
-        
         <?
             //Order date and time information
             echo "<p>Order processed at $date</p>";
             echo '<p>Your order is as follows: </p>';
+
+            /* ----------------------- WORKING OUT THE FORM TOTAL ----------------------- */
+            //Set var
+            $totalqty = 0;
+            $totalamount = 0.00;
+            $taxrate = 0.06; //WV Sales tax is 6%
+            //Define constants
             define('TIREPRICE', 100);
             define('OILPRICE', 10);
             define('SPARKPRICE', 4);
@@ -40,6 +46,8 @@
         <?php
             //Count item quantities
             $totalqty = $tireqty + $sparkqty + $oilqty;
+            //use htmlspecialchars() function for security purposes.
+            echo "<h4>Items ordered: $totalqty</h4>";
             //Control Flow if qty is empty
             if ($totalqty == 0) {
                 echo "<p style ='color:red'>";
@@ -58,15 +66,6 @@
                 }
             }
             
-            //use htmlspecialchars() function for security purposes.
-            echo "<h4>Items ordered: $totalqty</h4>";
-            
-
-/* ----------------------- WORKING OUT THE FORM TOTAL ----------------------- */
-            //Set var
-            $totalqty = 0;
-            $totalamount = 0.00;
-            $taxrate = 0.06; //WV Sales tax is 6%
             //Do math
            
             $totalamount = ($tireqty * TIREPRICE) +
@@ -79,17 +78,31 @@
             echo "<p>Total with tax included: $".number_format($totalamount,2)."</p>";
             echo "<p>Address to ship to is: ".htmlspecialchars($address)."</p>";
 
-        ?>
-        <?php
+            //Output string to file
+            $outputstring = $date."\t".$tireqty." tires \t" . oilqty ." oil\t"
+                            . $sparkqty ." spark plugs\t $" . $totalamount . "\t" . $address . "\n";
+
         //OPEN FILE FOR ORDERS FROM ORDERS DIR
         //Opens file in "APPEND" and "BINARY" modes so orders are not overwritten
-        $fp = @fopen("$document_root/orders/orders.txt", 'ab'); 
+        //Use '@' to suppress error handling
+        @$fp = fopen("orders/orders.txt", 'ab'); 
         //Control flow error handling
         if(!$fp) {
             echo "<p><strong> Your order could not be processed at this time. 
                 Please try again later.</strong></p>";
             exit;
-        }   ?> 
+        }   
+        
+            //Lock file with 'file lock' flock
+            flock($fp, LOCK_EX);
+            //Write to $fp file variable with above defined output string.
+                fwrite($fp, $outputstring, strlen($outputstring));
+                //Unlock file
+                flock($fp, LOCK_UN);
+                //Close file
+                fclose($fp);
+            echo "<p>Order written.</p>";
+        ?> 
         
         <script src="" async defer></script>
     </body>
