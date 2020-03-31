@@ -4,7 +4,7 @@
     $oilqty = (int) $_POST['oilqty'];
     $sparkqty = (int) $_POST['sparkqty'];
     $address = preg_replace('/\t|\R/',' ',$_POST['address']);
-    //$document_root = $_SERVER['DOCUMENT_ROOT'];
+    $document_root = $_SERVER['DOCUMENT_ROOT'];
     $date = date('g:i, jS F Y');
     ?>
 
@@ -85,7 +85,7 @@
         //OPEN FILE FOR ORDERS FROM ORDERS DIR
         //Opens file in "APPEND" and "BINARY" modes so orders are not overwritten
         //Use '@' to suppress error handling
-        @$fp = fopen("orders/orders.txt", 'ab'); 
+        @$fp = fopen("$document_root/php_Examples/bobs_auto/orders/orders.txt", 'ab'); 
         //Control flow error handling
         if(!$fp) {
             echo "<p><strong> Your order could not be processed at this time. 
@@ -102,6 +102,7 @@
                 //Close file
                 fclose($fp);
             echo "<p>Order written.</p>";
+            echo $document_root;
         ?>
         <!-- Link to view customer orders -->
         <a href="vieworders.php">View Orders</a>
