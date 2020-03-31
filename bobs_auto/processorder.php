@@ -79,7 +79,7 @@
             echo "<p>Address to ship to is: ".htmlspecialchars($address)."</p>";
 
             //Output string to file
-            $outputstring = $date."\t".$tireqty." tires \t" . oilqty ." oil\t"
+            $outputstring = $date."\t".$tireqty." tires \t" . $oilqty ." oil\t"
                             . $sparkqty ." spark plugs\t $" . $totalamount . "\t" . $address . "\n";
 
         //OPEN FILE FOR ORDERS FROM ORDERS DIR
@@ -102,7 +102,9 @@
                 //Close file
                 fclose($fp);
             echo "<p>Order written.</p>";
-        ?> 
+        ?>
+        <!-- Link to view customer orders -->
+        <a href="vieworders.php">View Orders</a>
         
         <script src="" async defer></script>
     </body>

@@ -1,1 +1,3 @@
-8:26, 31st March 2020	1 tires 	oilqty oil	3 spark plugs	 $139.92	564 Fairwood Rd
+
+8:43, 31st March 2020	2 tires 	1 oil	4 spark plugs	 $239.56	1 John Marshall Drive, Huntington, WV
+8:44, 31st March 2020	1 tires 	2 oil	3 spark plugs	 $139.92	564 Fairwood Rd Huntington, WV 25705
