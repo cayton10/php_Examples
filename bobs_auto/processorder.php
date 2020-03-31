@@ -1,3 +1,13 @@
+<?php 
+    // create short var names
+    $tireqty = (int) $_POST['tireqty'];
+    $oilqty = (int) $_POST['oilqty'];
+    $sparkqty = (int) $_POST['sparkqty'];
+    $address = preg_replace('/\t|\R/',' ',$_POST['address']);
+    $document_root = $SERVER['DOCUMENT_ROOT'];
+    $date = date('g:i, jS F Y');
+    ?>
+
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -12,21 +22,22 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
+    
+        
         <h1>Bob's Auto Parts</h1>
         <h2>Order Results</h2>
         <!-- PHP CONSTANT DECLARATIONS -->
-
+        
         <?
+            //Order date and time information
+            echo "<p>Order processed at $date</p>";
+            echo '<p>Your order is as follows: </p>';
             define('TIREPRICE', 100);
             define('OILPRICE', 10);
             define('SPARKPRICE', 4);
         ?>
 
         <?php
-            //Create short var names
-            $tireqty = $_POST['tireqty'];
-            $oilqty = $_POST['oilqty'];
-            $sparkqty = $_POST['sparkqty'];
             //Count item quantities
             $totalqty = $tireqty + $sparkqty + $oilqty;
             //Control Flow if qty is empty
@@ -34,15 +45,22 @@
                 echo "<p style ='color:red'>";
                 echo "You didn't place any orders yet. <br />";
                 echo "</p>";
-                exit;
+                
+            }   else {
+                if ($tireqty > 0) {
+                    echo htmlspecialchars($tireqty).' tires<br />';
+                }
+                if ($oilqty > 0) {
+                    echo htmlspecialchars($oilqty).' bottles of oil<br />';
+                }
+                if ($sparkqty > 0) {
+                    echo htmlspecialchars($sparkqty).' spark plugs<br />';
+                }
             }
-            //Order date and time information
-            echo '<p>Order processed at '.date('h:i, jS F Y')."</p><br />";
-            echo '<p>Your order is as follows: </p>';
+            
             //use htmlspecialchars() function for security purposes.
-            echo htmlspecialchars($tireqty).' tires at $ <br />';
-            echo htmlspecialchars($oilqty).' bottles of oil<br />';
-            echo htmlspecialchars($sparkqty).' spark plugs<br />';
+            echo "<h4>Items ordered: $totalqty</h4>";
+            
 
 /* ----------------------- WORKING OUT THE FORM TOTAL ----------------------- */
             //Set var
@@ -55,15 +73,23 @@
                            ($oilqty * OILPRICE) +
                            ($sparkqty * SPARKPRICE);
             
-
-            echo "<h3>Items ordered: ".$totalqty."</h3><br />";
-            echo "<h4>Subtotal: $".$totalamount."</h4><br />";
+            echo "<p>Subtotal: $".$totalamount."<p>";
 
             $totalamount *= (1 + $taxrate);
             echo "<p>Total with tax included: $".number_format($totalamount,2)."</p>";
-
+            echo "<p>Address to ship to is: ".htmlspecialchars($address)."</p>";
 
         ?>
+        <?php
+        //OPEN FILE FOR ORDERS FROM ORDERS DIR
+        //Opens file in "APPEND" and "BINARY" modes so orders are not overwritten
+        $fp = @fopen("$document_root/orders/orders.txt", 'ab'); 
+        //Control flow error handling
+        if(!$fp) {
+            echo "<p><strong> Your order could not be processed at this time. 
+                Please try again later.</strong></p>";
+            exit;
+        }   ?> 
         
         <script src="" async defer></script>
     </body>

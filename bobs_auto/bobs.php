@@ -12,8 +12,12 @@
         <link rel="stylesheet" href="">
     </head>
     <body>
-        <?php echo '<p>Hello World</p>'; ?>
-<?php
+        
+<? $phrase = "Hello World!";
+
+echo <<<EOD
+    I'm supposed to tell you $phrase
+    EOD;
 /*---------------------------- Order form setup ---------------------------- */
 ?>
 <? echo '<h1>Hello World!</h1>'; ?>
@@ -35,6 +39,9 @@
                     <td>Spark Plugs</td>
                     <td><input type="text" name="sparkqty" size="3" maxlength="3"/></td>
                 </tr>
+                <tr>
+                    <td>Shipping Address</td>
+                    <td><input type="text" name="address" size="50" maxLength="50"/></td>
                 <tr>
                     <td colspan="2" style="text-align: center;"><input type="submit" value="Submit Order" /></td>
                 </tr>
