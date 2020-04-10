@@ -53,6 +53,8 @@
                 echo "<p style ='color:red'>";
                 echo "You didn't place any orders yet. <br />";
                 echo "</p>";
+                //Exit script so no empty orders are written
+                exit;
                 
             }   else {
                 if ($tireqty > 0) {
@@ -91,7 +93,7 @@
             echo "<p><strong> Your order could not be processed at this time. 
                 Please try again later.</strong></p>";
             exit;
-        }   
+        }
         
             //Lock file with 'file lock' flock
             flock($fp, LOCK_EX);
@@ -102,7 +104,6 @@
                 //Close file
                 fclose($fp);
             echo "<p>Order written.</p>";
-            echo $document_root;
         ?>
         <!-- Link to view customer orders -->
         <a href="vieworders.php">View Orders</a>

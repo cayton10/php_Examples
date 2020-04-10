@@ -14,25 +14,24 @@
     <body>
         <h1>Bob's Auto Parts</h1>
         <h2>Customer Orders</h2>
-        <?php
-            @$fp = fopen("orders/orders.txt", 'rb');
-            flock($fp, LOCK_SH); //Lock file for reading
+        <?
+        //Short var file root access
+        $document_root = $_SERVER['DOCUMENT_ROOT'];
+        //Count orders
+        $orders = file("$document_root/php_Examples/bobs_auto/orders/orders.txt");
 
-        //Control flow for file opening or.... not... opening
-        if(!$fp) {
-            echo "<p><strong>No orders pending.<br />
-                  Please try again later.</strong></p>";
-                  exit;
+        $number_of_orders = count($orders);
+            if($number_of_orders == 0) {
+                echo "<p><strong>No orders pending.<br />
+                Please try again later.</strong></p>";
             }
-
-        while (!feof($fp)) {
-            $order = fgets($fp);
-            echo htmlspecialchars($order)."<br />";
-            }
-
-        flock($fp, LOCK_UN); //relase read lock
-            fclose($fp);
-            ?>
+        //Print orders
+        for ($i=0; $i<$number_of_orders; $i++) {
+            echo $orders[$i]."<br />";
+        }
+        ?>
+            
+        
         
         <script src="" async defer></script>
     </body>
